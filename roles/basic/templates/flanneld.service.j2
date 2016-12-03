@@ -1,0 +1,16 @@
+[Unit]
+Description=Flanneld
+Documentation=https://github.com/coreos/flannel
+After=network.target
+Before=docker.service
+ 
+[Service]
+User=root
+ExecStart={{FLANNEL_DIR}}{{FLANNEL_VERSION}}/flanneld \
+--etcd-endpoints="http://{{ ansible_eth0.ipv4.address }}:2379" \
+--iface={{ ansible_eth0.ipv4.address }} \
+--ip-masq
+Restart=on-failure
+Type=notify
+User=flannel
+LimitNOFILE=65536

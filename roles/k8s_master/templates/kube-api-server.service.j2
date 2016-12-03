@@ -1,0 +1,26 @@
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/kubernetes/kubernetes
+After=network.target
+
+[Service]
+User=root
+ExecStart={{K8S_DIR}}{{K8S_VERSION}}/kubernetes/server/bin/kube-apiserver \
+--insecure-bind-address={{ ansible_eth0.ipv4.address }} \
+--insecure-port=8080 \
+--etcd-servers=http://{{ ansible_eth0.ipv4.address }}:2379 \
+--logtostderr=true \
+--allow-privileged=false \
+--service-cluster-ip-range={{K8S_SERVICE_CLUSTER_IP_RANGE}} \
+--admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,SecurityContextDeny,ResourceQuota \
+--service-node-port-range=30000-32767 \
+--advertise-address={{ ansible_eth0.ipv4.address }} \
+--client-ca-file=/srv/kubernetes/ca.crt \
+--tls-cert-file=/srv/kubernetes/server.crt \
+--tls-private-key-file=/srv/kubernetes/server.key
+Restart=on-failure
+Type=notify
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

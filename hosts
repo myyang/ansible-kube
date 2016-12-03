@@ -1,0 +1,8 @@
+[masters]
+k8s_master_1    ansible_connection=ssh  ansible_user=ubuntu ansible_ssh_private_key_file=/etc/.ssh/aws_vss.pem
+
+[slaves]
+k8s_slaves_1    ansible_connection=ssh  ansible_user=ubuntu ansible_ssh_private_key_file=/etc/.ssh/aws_vss.pem
+
+[localhost]
+localhost   ansible_connection=local

@@ -1,0 +1,17 @@
+[Unit]
+Description=Kubernetes Kubelet
+After=docker.service
+Requires=docker.service
+ 
+[Service]
+ExecStart={{K8S_DIR}}{{K8S_VERSION}}/kubernetes/server/bin/kubelet \
+--hostname-override={{ansible_eth0.ipv4.address}} \
+--api-servers=http://${MASTER_IP}:8080 \
+--logtostderr=true \
+--cluster-dns=$DNS_SERVER_IP \
+--cluster-domain=$DNS_DOMAIN
+Restart=on-failure
+KillMode=process
+  
+[Install]
+WantedBy=multi-user.target

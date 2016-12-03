@@ -1,0 +1,36 @@
+---
+
+#- name: Copy master keys
+
+- name: Config kube-api-server service
+  template:
+    src: kube-api-server.service.j2
+    dest: /lib/systemd/system/kube-api-server.service
+    owner: root
+    group: root
+    mode: 0644
+
+#- name: Start/Restart kube-api-server service
+#  systemd: name=kube-api-server state=restarted daemon_reload=yes
+
+- name: Config kube-controller-manager service
+  template:
+    src: kube-controller-manager.service.j2
+    dest: /lib/systemd/system/kube-controller-manager.service
+    owner: root
+    group: root
+    mode: 0644
+
+#- name: Start/Restart kube-controller-manager service
+#  systemd: name=kube-controller-manager state=restarted daemon_reload=yes
+
+- name: Config kube-scheduler service
+  template:
+    src: kube-scheduler.service.j2
+    dest: /lib/systemd/system/kube-scheduler.service
+    owner: root
+    group: root
+    mode: 0644
+
+#- name: Start/Restart kube-scheduler service
+#  systemd: name=kube-scheduler state=restarted daemon_reload=yes

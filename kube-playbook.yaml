@@ -1,0 +1,38 @@
+---
+
+- name: generate ssl key for k8s
+  hosts: localhost
+  pre_tasks:
+    - name: execute shell
+      raw: cd ssl/k8s_naive/ && MASTER_IP={{K8S_INITIAL_MASTER_IP}} ./gen_ca.sh
+    - setup: #
+
+- name: setup python2
+  hosts: masters:slaves
+  become: true
+  gather_facts: no
+  pre_tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+    - setup: # aka gather_facts
+
+- name: gather_facts on masters and slaves
+  hosts: masters:slaves
+
+- name: Setup etcd, flannel, docker
+  hosts: masters:slaves
+  become: true
+  roles:
+    - basic
+
+- name: configure master
+  hosts: masters
+  become: true
+  roles:
+    - k8s_master
+
+- name: configure slave
+  hosts: slaves
+  become: true
+  roles:
+    - k8s_slaves

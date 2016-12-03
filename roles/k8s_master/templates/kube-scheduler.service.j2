@@ -1,0 +1,14 @@
+[Unit]
+Description=Kubernetes Scheduler
+Documentation=https://github.com/kubernetes/kubernetes
+ 
+[Service]
+User=root
+ExecStart={{K8S_DIR}}{{K8S_VERSION}}/kubernetes/server/bin/kube-scheduler \
+--logtostderr=true \
+--master={{ansible_eth0.ipv4.address}}:8080
+Restart=on-failure
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
