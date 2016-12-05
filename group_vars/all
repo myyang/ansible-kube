@@ -1,8 +1,6 @@
 ---
 # variable for all host groups
 
-CLUSTER_NODES: ''
-
 ETCD_DIR: '/opt/etcd/'
 ETCD_DATA_DIR: '/var/lib/etcd/default/'
 ETCD_VERSION: 3.0.15
