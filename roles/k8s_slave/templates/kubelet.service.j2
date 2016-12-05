@@ -5,11 +5,11 @@ Requires=docker.service
  
 [Service]
 ExecStart={{K8S_DIR}}{{K8S_VERSION}}/kubernetes/server/bin/kubelet \
---hostname-override={{ansible_eth0.ipv4.address}} \
---api-servers=http://${MASTER_IP}:8080 \
+--hostname-override={{ ansible_eth0.ipv4.address }} \
+--api-servers=http://{{K8S_MASTER_LB_IP}}:8080 \
 --logtostderr=true \
---cluster-dns=$DNS_SERVER_IP \
---cluster-domain=$DNS_DOMAIN
+--cluster-dns={{K8S_DNS_SERVER_IP}} \
+--cluster-domain={{K8S_DOMAIN}}
 Restart=on-failure
 KillMode=process
   

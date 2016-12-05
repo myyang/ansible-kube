@@ -1,11 +1,11 @@
 ---
 
-- name: generate ssl key for k8s
-  hosts: localhost
-  pre_tasks:
-    - name: execute shell
-      raw: cd ssl/k8s_naive/ && MASTER_IP={{K8S_INITIAL_MASTER_IP}} ./gen_ca.sh
-    - setup: #
+#- name: generate ssl key for k8s
+#  hosts: localhost
+#  pre_tasks:
+#    - name: execute shell
+#      raw: cd ssl/k8s_naive/ && MASTER_IP={{K8S_INITIAL_MASTER_IP}} ./gen_ca.sh
+#    - setup: #
 
 - name: setup python2
   hosts: masters:slaves
@@ -35,4 +35,4 @@
   hosts: slaves
   become: true
   roles:
-    - k8s_slaves
+    - k8s_slave

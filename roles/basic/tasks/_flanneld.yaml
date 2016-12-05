@@ -1,0 +1,40 @@
+---
+
+# ==================
+# Setting up flannel
+# ==================
+- name: promise flannel user
+  user: name=flannel system=yes state=present
+
+- name: promise flannel path
+  file: path={{FLANNEL_DIR}} state=directory recurse=yes owner=flannel group=flannel
+
+- name: check flannel exists
+  stat:
+    path: "{{FLANNEL_DIR}}{{FLANNEL_VERSION}}"
+  register: flldir
+
+- name: Promise version folder
+  file: path={{FLANNEL_DIR}}{{FLANNEL_VERSION}} state=directory recurse=yes owner=flannel group=flannel
+  when: flldir.stat.exists == False or flldir.stat.isdir == False
+
+- name: Obtain flannel
+  unarchive:
+    src: "https://github.com/coreos/flannel/releases/download/v{{FLANNEL_VERSION}}/flannel-v{{FLANNEL_VERSION}}-linux-amd64.tar.gz"
+    dest: "{{FLANNEL_DIR}}{{FLANNEL_VERSION}}"
+    remote_src: yes
+    owner: flannel
+    group: flannel
+  when: flldir.stat.exists == False or flldir.stat.isdir == False
+
+- name: Config flannel service
+  template: src=flanneld.service.j2 dest=/lib/systemd/system/flanneld.service owner=root group=root mode=0644
+
+- name: Config etcd network
+  shell: "export $(cut -d= -s -f1,2 /etc/default/etcdctl | grep -v \"#\") && {{ETCD_DIR}}etcd-v{{ETCD_VERSION}}-linux-amd64/etcdctl set /{{FLANNEL_NET_PREFIX}}/network/config '{\"Network\":\"'{{FLANNEL_IP_RANGE}}'\", \"Backend\": {\"Type\": \"vxlan\"}}'"
+
+- name: Start/Restart flanneld service
+  systemd: name=flanneld state=restarted daemon_reload=yes enabled=yes
+
+- name: Generate docker opts file
+  shell: "cd {{FLANNEL_DIR}}{{FLANNEL_VERSION}} && ./mk-docker-opts.sh"

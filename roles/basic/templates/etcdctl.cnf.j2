@@ -1,0 +1,41 @@
+## Configuration
+# See also https://github.com/coreos/etcd/blob/master/etcdctl/READMEv2.md
+# NOTE this would be used by `export` directly, ex: export ETCDCTL_PEERS=http://localhost
+
+### --discovery-srv, -D
+# domain name to query for SRV records describing cluster endpoints
+# default: none
+# env variable: ETCDCTL_DISCOVERY_SRV
+
+### --peers
+# a comma-delimited list of machine addresses in the cluster
+# default: `"http://127.0.0.1:2379"`
+# env variable: ETCDCTL_PEERS
+ETCDCTL_PEERS={% for host in groups['masters'] | union(groups['slaves']) %}http://{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:2379{% if not loop.last %},{% endif %}{% endfor %}
+
+### --endpoint
+# a comma-delimited list of machine addresses in the cluster
+# default: `"http://127.0.0.1:2379"`
+# env variable: ETCDCTL_ENDPOINT
+# Without `--no-sync` flag, this will be overwritten by etcd cluster when it does internal sync.
+ETCDCTL_ENDPOINT={% for host in groups['masters'] | union(groups['slaves']) %}http://{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:2379{% if not loop.last %},{% endif %}{% endfor %}
+
+### --cert-file
+# identify HTTPS client using this SSL certificate file
+# default: none
+# env variable: ETCDCTL_CERT_FILE
+
+### --key-file
+# identify HTTPS client using this SSL key file
+# default: none
+# env variable: ETCDCTL_KEY_FILE
+
+### --ca-file
+# verify certificates of HTTPS-enabled servers using this CA bundle
+# default: none
+# env variable: ETCDCTL_CA_FILE
+
+### --username, -u
+# provide username[:password] and prompt if password is not supplied
+# default: none
+# env variable: ETCDCTL_USERNAME

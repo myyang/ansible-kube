@@ -1,7 +1,5 @@
 ---
 
-#- name: Copy k8s client key
-
 - name: Config kubelet service
   template:
     src: kubelet.service.j2
@@ -10,8 +8,8 @@
     group: root
     mode: 0644
 
-#- name: Start/Restart kubelet service
-#  systemd: name=kubelet state=restarted daemon_reload=yes
+- name: Start/Restart kubelet service
+  systemd: name=kubelet state=restarted daemon_reload=yes enabled=yes
 
 - name: Config kube-proxy service
   template:
@@ -21,16 +19,5 @@
     group: root
     mode: 0644
 
-#- name: Start/Restart kube-proxy service
-#  systemd: name=kube-proxy state=restarted daemon_reload=yes
-
-- name: Config kube-scheduler service
-  template:
-    src: kube-scheduler.service.j2
-    dest: /lib/systemd/system/kube-scheduler.service
-    owner: root
-    group: root
-    mode: 0644
-
-#- name: Start/Restart kube-scheduler service
-#  systemd: name=kube-scheduler state=restarted daemon_reload=yes
+- name: Start/Restart kube-proxy service
+  systemd: name=kube-proxy state=restarted daemon_reload=yes enabled=yes

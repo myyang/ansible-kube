@@ -9,9 +9,13 @@ ETCD_VERSION: 3.0.15
 
 FLANNEL_DIR: '/opt/flannel/'
 FLANNEL_VERSION: 0.6.2 
+FLANNEL_IP_RANGE: '10.55.0.0/16'
+FLANNEL_NET_PREFIX: 'flannel.vsaas.tutk.com'
 
+K8S_MASTER_LB_IP: "172.31.41.241"  # VPC or public IP
 K8S_DIR: '/opt/k8s/'
 K8S_VERSION: 1.4.6
 K8S_SERVICE_CLUSTER_IP_RANGE: '10.99.0.0/16'
-
-K8S_INITIAL_MASTER_IP: "localhost"
+K8S_DOMAIN: 'k8s.vsaas.tutk.com'
+K8S_DNS_SERVER_IP: '10.99.254.254'  # must within service cluster range
+K8S_DNS_REPLICAS: 2

@@ -1,0 +1,43 @@
+---
+
+# ============
+# setup Docker
+# ============
+
+- name: Update apt
+  apt: update_cache=yes
+
+- name: Install HTTPS and CA
+  apt: name={{ item }} state=present
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+
+- name: Add key
+  apt_key: keyserver=hkp://ha.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
+
+- name: Add repository
+  apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-xenial main' state=present filename=docker
+
+- name: Update apt again
+  apt: update_cache=yes
+
+#- name: Install kernel
+#  command: /usr/bin/apt install -y 'linux-image-extra-$(uname -r)'
+
+- name: Install linux virtual tool
+  apt: name=linux-image-extra-virtual state=present
+
+- name: Install docker engine
+  apt: name=docker-engine state=present
+
+- name: Config docker engine
+  template:
+    src: docker.service.j2
+    dest: /lib/systemd/system/docker.service
+    owner: root
+    group: root
+    mode: 0644
+
+- name: start service
+  systemd: name=docker state=restarted daemon_reload=yes enabled=yes

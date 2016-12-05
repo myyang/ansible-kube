@@ -1,0 +1,42 @@
+---
+
+# ===============
+# Setting up etcd
+# ===============
+- name: promise etcd user
+  user: name=etcd system=yes state=present
+
+- name: promise etcd path
+  file: path={{ETCD_DIR}} state=directory recurse=yes owner=etcd group=etcd
+
+- name: clear previous cluster info if exsits
+  file: path={{ETCD_DATA_DIR}} state=absent
+
+- name: promise etcd cluster info path
+  file: path={{ETCD_DATA_DIR}} state=directory recurse=yes owner=etcd group=etcd
+
+- name: check etcd exists
+  stat:
+    path: "{{ETCD_DIR}}/etcd-v{{ETCD_VERSION}}-linux-amd64"
+  register: etcddir
+
+- name: Obtain etcd
+  unarchive:
+    src: "https://github.com/coreos/etcd/releases/download/v{{ETCD_VERSION}}/etcd-v{{ETCD_VERSION}}-linux-amd64.tar.gz"
+    dest: "{{ETCD_DIR}}"
+    remote_src: yes
+    owner: etcd
+    group: etcd
+  when: etcddir.stat.exists == False or etcddir.stat.isdir == False
+
+- name: Config etcd service
+  template: src=etcd.service.j2 dest=/lib/systemd/system/etcd.service owner=root group=root mode=0644
+
+- name: Config etcd options
+  template: src=etcd.cnf.j2 dest=/etc/default/etcd owner=root group=root mode=0644
+
+- name: Config etcdctl options
+  template: src=etcdctl.cnf.j2 dest=/etc/default/etcdctl owner=root group=root mode=0644
+
+- name: Start/Restart etcd service
+  systemd: name=etcd state=restarted daemon_reload=yes enabled=yes
