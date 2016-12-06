@@ -16,6 +16,11 @@
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
     - setup: # aka gather_facts
 
+- name: prepare local
+  hosts: localhost
+  roles:
+    - local_prepare
+
 - name: gather_facts on masters and slaves
   hosts: masters:slaves
 

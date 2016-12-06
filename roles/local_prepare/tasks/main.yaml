@@ -1,0 +1,4 @@
+---
+
+- name: Generate k8s ssl
+  shell: "ssl/k8s/naive/gen_ca.sh {{K8S_CERT_DOMAIN}}/O={{K8_MASTER_EXT_LB_IP}}""

@@ -8,3 +8,6 @@
 *.crt
 *.csr
 *.srl
+
+# generated ssl
+_ssl*

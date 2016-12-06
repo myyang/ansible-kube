@@ -6,26 +6,15 @@
 - name: promise k8s certificates
   file: path={{K8S_DIR}}{{K8S_VERSION}}/ssl state=directory recurse=yes owner=root group=root
 
-#- name: Copy certificates generate script
-#  template:
-#    src: gen_ca.sh.j2
-#    dest: "{{K8S_DIR}}{{K8S_VERSION}}/ssl/gen_ca.sh"
-#    owner: root
-#    group: root
-#    mode: 0700
-
 - name: copy ca-file
-  copy: src=ssl/ca.crt dest={{K8S_DIR}}{{K8S_VERSION}}/ssl/ca.crt owner=root group=root mode=0600
+  copy: src=ssl/k8s/_ssl/ca.crt dest={{K8S_DIR}}{{K8S_VERSION}}/ssl/ca.crt owner=root group=root mode=0600
 
 - name: copy server crt
-  copy: src=ssl/server.crt dest={{K8S_DIR}}{{K8S_VERSION}}/ssl/server.crt owner=root group=root mode=0600
+  copy: src=ssl/k8s/_ssl/server.crt dest={{K8S_DIR}}{{K8S_VERSION}}/ssl/server.crt owner=root group=root mode=0600
 
 - name: copy server key
-  copy: src=ssl/server.key dest={{K8S_DIR}}{{K8S_VERSION}}/ssl/server.key owner=root group=root mode=0600
+  copy: src=ssl/k8s/_ssl/server.key dest={{K8S_DIR}}{{K8S_VERSION}}/ssl/server.key owner=root group=root mode=0600
   
-- name: Generate certificates
-  shell: "cd {{K8S_DIR}}{{K8S_VERSION}}/ssl && ./gen_ca.sh"
-
 - name: Config kube-api-server service
   template:
     src: kube-api-server.service.j2
