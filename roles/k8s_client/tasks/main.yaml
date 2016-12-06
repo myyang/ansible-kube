@@ -1,0 +1,21 @@
+---
+
+- name: check kubectl exists
+  stat: path=/usr/local/bin/kubectl
+  register: kubectlex
+
+- name: obtain and setup kubectl
+  shell: "scripts/download_kubectl.sh {{K8S_VERSION}}"
+  when: kubectlex.stat.exists == False or kubectlex.stat.executable == False
+
+- name: Config kubernetes cluster
+  shell: "kubectl config set-cluster '{{CLUSTER_NAME}}' --server=http://{{K8S_MASTER_EXT_LB_IP}}:8080"
+
+- name: Config kubernetes credential
+  shell: "kubectl config set-credentials '{{CLUSTER_NAME}}' --client-certificate=''"
+
+- name: Config context
+  shell: "kubectl config set-context '{{CLUSTER_NAME}}' --cluster='{{CLUSTER_NAME}}' --namespace='{{CLUSTER_NAME}}'"
+
+- name: Use latest context
+  shell: "kubectl config use-context '{{CLUSTER_NAME}}'"

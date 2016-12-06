@@ -1,0 +1,11 @@
+---
+
+- name: Config dns replica set
+  template: src=skydns-rc.yaml.j2 dest=/tmp/skydns-rc.yaml
+
+- name: Config dns service
+  template: src=skydns-svc.yaml.j2 dest=/tmp/skydns-svc.yaml
+
+# directly fail if no command or config error
+- name: Create dns service
+  shell: kubectl create -f /tmp/skydns-rc.yaml && kubectl create -f /tmp/skydns-svc.yaml

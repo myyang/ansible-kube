@@ -41,3 +41,13 @@
   become: true
   roles:
     - k8s_slave
+
+- name: configure client
+  hosts: localhost
+  roles:
+    - k8s_client
+
+- name: configure dns
+  hosts: localhost
+  roles:
+    - k8s_dns
