@@ -6,11 +6,9 @@ Before=docker.service
  
 [Service]
 User=root
-ExecStart={{FLANNEL_DIR}}{{FLANNEL_VERSION}}/flanneld \
---etcd-endpoints="{% for host in groups['masters'] | union(groups['workers']) %}https://{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:2379{% if not loop.last %},{% endif %}{% endfor %}" \
---etcd-prefix={{FLANNEL_NET_PREFIX}}/network \
---iface={{ ansible_eth0.ipv4.address }} \
---ip-masq
+Environment=DAEMON_ARGS=
+EnvironmentFile=-/etc/default/%p
+ExecStart={{FLANNEL_DIR}}{{FLANNEL_VERSION}}/flanneld $DAEMON_ARGS
 Restart=on-failure
 Type=notify
 LimitNOFILE=65536

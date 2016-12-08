@@ -6,15 +6,13 @@
 - name: promise k8s certificates
   file: path={{K8S_DIR}}{{K8S_VERSION}}/ssl state=directory recurse=yes owner=root group=root
 
-- name: copy ca-file
-  copy: src=ssl/k8s/_ssl/ca.crt dest={{K8S_DIR}}{{K8S_VERSION}}/ssl/ca.crt owner=root group=root mode=0600
+- name: copy k8s certificates
+  copy: src=ssl/k8s/_ssl/{{item}}.pem dest={{K8S_DIR}}{{K8S_VERSION}}/ssl/{{item}}.pem owner=root group=root mode=0600
+  with_items:
+    - ca
+    - master
+    - master-key
 
-- name: copy server crt
-  copy: src=ssl/k8s/_ssl/server.crt dest={{K8S_DIR}}{{K8S_VERSION}}/ssl/server.crt owner=root group=root mode=0600
-
-- name: copy server key
-  copy: src=ssl/k8s/_ssl/server.key dest={{K8S_DIR}}{{K8S_VERSION}}/ssl/server.key owner=root group=root mode=0600
-  
 - name: Config kube-api-server service
   template:
     src: kube-api-server.service.j2

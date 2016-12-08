@@ -24,16 +24,19 @@ ETCDCTL_ENDPOINT={% for host in groups['masters'] | union(groups['workers']) %}h
 # identify HTTPS client using this SSL certificate file
 # default: none
 # env variable: ETCDCTL_CERT_FILE
+ETCDCTL_CERT_FILE={{ETCD_DIR}}{{ETCD_VERSION}}/ssl/client.pem
 
 ### --key-file
 # identify HTTPS client using this SSL key file
 # default: none
 # env variable: ETCDCTL_KEY_FILE
+ETCDCTL_KEY_FILE={{ETCD_DIR}}{{ETCD_VERSION}}/ssl/client-key.pem
 
 ### --ca-file
 # verify certificates of HTTPS-enabled servers using this CA bundle
 # default: none
 # env variable: ETCDCTL_CA_FILE
+ETCDCTL_CA_FILE={{ETCD_DIR}}{{ETCD_VERSION}}/ssl/ca.pem
 
 ### --username, -u
 # provide username[:password] and prompt if password is not supplied

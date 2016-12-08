@@ -5,16 +5,16 @@ if [ -z ${1} ]; then
     exit 1
 fi
 
-openssl genrsa -out ca.key 2048
-openssl req -x509 -new -nodes -key ca.key -subj "/CN=${1}" -days 10000 -out ca.crt
+openssl genrsa -out ca-key.pem 2048
+openssl req -x509 -new -nodes -key ca-key.pem -subj "/CN=${1}" -days 10000 -out ca.pem
  
-openssl genrsa -out server.key 2048
-openssl req -new -key server.key -subj "/CN=${1}" -out server.csr
-openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 10000
-openssl x509 -noout -text -in ./server.crt
+openssl genrsa -out master-key.pem 2048
+openssl req -new -key master-key.pem -subj "/CN=${1}" -out master.csr
+openssl x509 -req -in master.csr -CA ca.pem -CAkey ca-key.pem -CAcreateserial -out master.pem -days 10000
+openssl x509 -noout -text -in ./master.pem
 
 now="_ssl$(date "+%Y%m%d%H%M%S")"
 mkdir -p $now
-mv ca.key ca.crt server.key server.crt ca.srl server.csr $now/
+mv ca-key.pem ca.pem master-key.pem master.pem ca.srl master.csr $now/
 
 ln -s naive/$now ../_ssl

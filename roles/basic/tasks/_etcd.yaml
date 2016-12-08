@@ -15,6 +15,24 @@
 - name: promise etcd cluster info path
   file: path={{ETCD_DATA_DIR}} state=directory recurse=yes owner=etcd group=etcd
 
+- name: promise etcd tls/ssl path
+  file: path={{ETCD_DIR}}{{ETCD_VERSION}}/ssl/ state=directory recurse=yes owner=etcd group=etcd
+
+- name: copy etcd server certificates
+  copy: src=ssl/etcd/_ssl/{{item}} dest={{ETCD_DIR}}{{ETCD_VERSION}}/ssl/{{item}} owner=etcd group=etcd mode=0600
+  with_items:
+    - ca.pem
+    - server.pem
+    - server-key.pem
+    #- "{{ansible_eth0.ipv4.address}}-peer.pem"
+    #- "{{ansible_eth0.ipv4.address}}-peer-key.pem"
+
+- name: copy etcd client.pem
+  copy: src=ssl/etcd/_ssl/{{item}} dest={{ETCD_DIR}}{{ETCD_VERSION}}/ssl/{{item}} owner=root group=root mode=0644
+  with_items:
+    - client.pem
+    - client-key.pem
+
 - name: check etcd exists
   stat:
     path: "{{ETCD_DIR}}/etcd-v{{ETCD_VERSION}}-linux-amd64"
@@ -32,11 +50,11 @@
 - name: Config etcd service
   template: src=etcd.service.j2 dest=/lib/systemd/system/etcd.service owner=root group=root mode=0644
 
-- name: Config etcd options
-  template: src=etcd.cnf.j2 dest=/etc/default/etcd owner=root group=root mode=0644
-
-- name: Config etcdctl options
-  template: src=etcdctl.cnf.j2 dest=/etc/default/etcdctl owner=root group=root mode=0644
+- name: Config etcd and etcdctl options
+  template: src={{item}}.cnf.j2 dest=/etc/default/{{item}} owner=root group=root mode=0644
+  with_items:
+    - etcd
+    - etcdctl
 
 - name: Start/Restart etcd service
   systemd: name=etcd state=restarted daemon_reload=yes enabled=yes

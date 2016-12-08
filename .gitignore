@@ -11,3 +11,5 @@
 
 # generated ssl
 _ssl*
+
+ssl/*/*/*.json

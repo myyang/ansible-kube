@@ -1,0 +1,22 @@
+---
+
+- name: Config etcd openssl
+  template:
+    src: etcd-openssl.cnf.j2
+    dest: ssl/etcd/ssl_v1/openssl.cnf
+
+- name: Generate etcd ssl
+  shell: "cd ssl/etcd/ssl_v1 && ./gen_ca.sh"
+
+- name: Config k8s openssl
+  template:
+    src: k8s-openssl.cnf.j2
+    dest: ssl/k8s/ssl_v1/openssl.cnf
+
+- name: Config k8s worker-openssl
+  template:
+    src: k8s-worker-openssl.cnf.j2
+    dest: ssl/k8s/ssl_v1/worker-openssl.cnf
+
+- name: Generate k8s ssl
+  shell: "cd ssl/k8s/ssl_v1 && ./gen_ca.sh"

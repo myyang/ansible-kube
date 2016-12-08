@@ -1,0 +1,118 @@
+## Configuration
+
+#### --alsologtostderr
+# log to standard error as well as files
+
+
+#### --etcd-cafile string
+# SSL Certificate Authority file used to secure etcd communication
+FLANNELD_ETCD_CAFILE={{ETCD_DIR}}{{ETCD_VERSION}}/ssl/ca.pem
+
+
+#### --etcd-certfile string
+# SSL certification file used to secure etcd communication
+FLANNELD_ETCD_CERTFILE={{ETCD_DIR}}{{ETCD_VERSION}}/ssl/client.pem
+
+
+#### --etcd-endpoints string
+# a comma-delimited list of etcd endpoints (default "http://127.0.0.1:4001,http://127.0.0.1:2379")
+FLANNELD_ETCD_ENDPOINTS="{% for host in groups['masters'] | union(groups['workers']) %}https://{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:2379{% if not loop.last %},{% endif %}{% endfor %}"
+
+
+#### --etcd-keyfile string
+# SSL key file used to secure etcd communication
+FLANNELD_ETCD_KEYFILE={{ETCD_DIR}}{{ETCD_VERSION}}/ssl/client-key.pem
+
+#### --etcd-password string
+# Password for BasicAuth to etcd
+
+
+#### --etcd-prefix string
+# etcd prefix (default "/coreos.com/network")
+FLANNELD_ETCD_PREFIX={{FLANNEL_NET_PREFIX}}/network
+
+
+#### --etcd-username string
+# Username for BasicAuth to etcd
+
+
+#### --help
+# print this message
+
+
+#### --iface string
+# interface to use (IP or name) for inter-host communication
+FLANNELD_IFACE={{ ansible_eth0.ipv4.address }}
+
+
+#### --ip-masq
+# setup IP masquerade rule for traffic destined outside of overlay network
+FLANNELD_IP_MASQ=true
+
+
+#### --listen string
+# run as server and listen on specified address (e.g. ':8080')
+
+
+#### --log_backtrace_at value
+# when logging hits line file:N, emit a stack trace (default :0)
+
+
+#### --log_dir string
+# If non-empty, write log files in this directory
+
+
+#### --logtostderr
+# log to standard error instead of files
+
+
+#### --networks string
+# run in multi-network mode and service the specified networks
+
+
+#### --public-ip string
+# IP accessible by other nodes for inter-host communication
+
+
+#### --remote string
+# run as client and connect to server on specified address (e.g. '10.1.2.3:8080')
+
+
+#### --remote-cafile string
+# SSL Certificate Authority file used to secure client/server communication
+
+
+#### --remote-certfile string
+# SSL certification file used to secure client/server communication
+
+
+#### --remote-keyfile string
+# SSL key file used to secure client/server communication
+
+
+#### --stderrthreshold value
+# logs at or above this threshold go to stderr
+
+
+#### --subnet-dir string
+# directory where files with env variables (subnet, MTU, ...) will be written to (default "/run/flannel/networks")
+
+
+#### --subnet-file string
+# filename where env variables (subnet, MTU, ... ) will be written to (default "/run/flannel/subnet.env")
+
+
+#### --v value
+# log level for V logs
+
+
+#### --version
+# print version and exit
+
+
+#### --vmodule value
+# comma-separated list of pattern=N settings for file-filtered logging
+
+
+#### --watch-networks
+# run in multi-network mode and watch for networks from 'networks' or all networks

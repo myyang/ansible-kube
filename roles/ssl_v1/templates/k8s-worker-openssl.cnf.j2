@@ -7,4 +7,7 @@ basicConstraints = CA:FALSE
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 subjectAltName = @alt_names
 [alt_names]
-IP.1 = $ENV::WORKER_IP
+{% for host in groups['workers'] %}
+DNS.{{loop.index}} = {{hostvars[host]['ansible_nodename']}}
+IP.{{loop.index}} = {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}
+{% endfor %}

@@ -1,0 +1,35 @@
+---
+
+- name: check cfssl
+  stat: path=/usr/local/bin/cfssl
+  register: cfsslex
+
+- fail:
+    msg: "Please download `cfssl` and put at /usr/local/bin/cfssl"
+  when: cfsslex.stat.exists == False
+
+- name: Config etcd json files
+  template:
+    src: "etcd-{{item}}.json.j2"
+    dest: "ssl/etcd/ssl_v2/{{item}}.json"
+  with_items:
+    - ca-config
+    - ca-csr
+    - server
+    - client
+
+- name: Generate etcd ssl
+  shell: "cd ssl/etcd/ssl_v2 && ./gen_ca.sh"
+
+- name: Config k8s json files
+  template:
+    src: "k8s-{{item}}.json.j2"
+    dest: "ssl/k8s/ssl_v2/{{item}}.json"
+  with_items:
+    - ca-config
+    - ca-csr
+    - master
+    - worker
+
+- name: Generate k8s ssl
+  shell: "cd ssl/k8s/ssl_v2 && ./gen_ca.sh"

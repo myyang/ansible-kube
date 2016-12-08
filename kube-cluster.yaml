@@ -1,10 +1,5 @@
 ---
 
-- name: prepare local
-  hosts: localhost
-  roles:
-    - local_prepare
-
 - name: setup python2
   hosts: masters:workers
   become: true
@@ -14,8 +9,14 @@
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
     - setup: # aka gather_facts
 
-- name: gather_facts on masters and workers
-  hosts: masters:workers
+- name: gather_facts all
+  hosts: all
+
+- name: prepare local
+  hosts: localhost
+  roles:
+    - local_prepare
+    - ssl_v2
 
 - name: Setup etcd, flannel, docker
   hosts: masters:workers

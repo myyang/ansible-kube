@@ -1,0 +1,21 @@
+{
+    "CN": "etcd peer cluster",
+    "hosts": [
+{% for host in groups['masters'] | union(groups['workers']) %}
+    "{{hostvars[host]['ansible_nodename']}}",
+    "{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}"{%if not loop.last %},{% endif %}
+{% endfor %}
+    ],
+    "key": {
+        "algo": "rsa",
+        "size": 2048
+    },
+    "names": [
+        {
+            "C": "TW",
+            "L": "TPE",
+            "ST": "Taipei"
+        }
+    ]
+}
+

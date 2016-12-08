@@ -16,7 +16,3 @@
     dest: "/tmp"
     remote_src: yes
   when: K8S_OBTAIN_REMOTE == 0 and localk8sex.stat.exists == False
-
-- name: Generate k8s ssl
-  shell: "cd ssl/k8s/naive && ./gen_ca.sh {{K8S_CERT_DOMAIN}}/O={{K8S_MASTER_EXT_LB_IP}}"
-

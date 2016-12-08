@@ -196,33 +196,35 @@ ETCD_ADVERTISE_CLIENT_URLS="https://{{ ansible_eth0.ipv4.address }}:2379"
 ##### -ca-file [DEPRECATED]
 ## Path to the client server TLS CA file.
 ## default: none
-# ETCD_CA_FILE=""
+# ETCD_CA_FILE="{{ETCD_DIR}}{{ETCD_VERSION}}/ssl/ca.pem"
 
 ##### -cert-file
 ## Path to the client server TLS cert file.
 ## default: none
-# ETCD_CERT_FILE=""
+ETCD_CERT_FILE="{{ETCD_DIR}}{{ETCD_VERSION}}/ssl/server.pem"
 
 ##### -key-file
 ## Path to the client server TLS key file.
 ## default: none
-# ETCD_KEY_FILE=""
+ETCD_KEY_FILE="{{ETCD_DIR}}{{ETCD_VERSION}}/ssl/server-key.pem"
 
 ##### -client-cert-auth
 ## Enable client cert authentication.
 ## default: false
 # ETCD_CLIENT_CERT_AUTH
+ETCD_CLIENT_CERT_AUTH=true
 
 ##### -trusted-ca-file
 ## Path to the client server TLS trusted CA key file.
 ## default: none
 # ETCD_TRUSTED_CA_FILE
+ETCD_TRUSTED_CA_FILE="{{ETCD_DIR}}{{ETCD_VERSION}}/ssl/ca.pem"
 
 ##### –auto-tls
 ## Client TLS using generated certificates
 ## default: false
 # ETCD_AUTO_TLS
-ETCD_AUTO_TLS=true
+#ETCD_AUTO_TLS=true
 
 ##### -peer-ca-file [DEPRECATED]
 ## Path to the peer server TLS CA file. `-peer-ca-file ca.crt` could be replaced
@@ -233,28 +235,31 @@ ETCD_AUTO_TLS=true
 ##### -peer-cert-file
 ## Path to the peer server TLS cert file.
 ## default: none
-# ETCD_PEER_CERT_FILE
+ETCD_PEER_CERT_FILE="{{ETCD_DIR}}{{ETCD_VERSION}}/ssl/server.pem"
 
 ##### -peer-key-file
 ## Path to the peer server TLS key file.
 ## default: none
 # ETCD_PEER_KEY_FILE
+ETCD_PEER_KEY_FILE="{{ETCD_DIR}}{{ETCD_VERSION}}/ssl/server-key.pem"
 
 ##### -peer-client-cert-auth
 ## Enable peer client cert authentication.
 ## default: false
 # ETCD_PEER_CLIENT_CERT_AUTH
+ETCD_PEER_CLIENT_CERT_AUTH=true
 
 ##### -peer-trusted-ca-file
 ## Path to the peer server TLS trusted CA file.
 ## default: none
 # ETCD_PEER_TRUSTED_CA_FILE
+ETCD_PEER_TRUSTED_CA_FILE="{{ETCD_DIR}}{{ETCD_VERSION}}/ssl/ca.pem"
 
 #### –peer-auto-tls
 ## Peer TLS using generated certificates
 ## default: false
 # ETCD_PEER_AUTO_TLS
-ETCD_PEER_AUTO_TLS=true
+#ETCD_PEER_AUTO_TLS=true
 
 ### Logging Flags
 ##### -debug

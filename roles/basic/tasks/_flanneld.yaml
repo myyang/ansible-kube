@@ -27,10 +27,13 @@
     group: flannel
   when: flldir.stat.exists == False or flldir.stat.isdir == False
 
-- name: Config flannel service
+- name: Config flanneld service
   template: src=flanneld.service.j2 dest=/lib/systemd/system/flanneld.service owner=root group=root mode=0644
 
-- name: Config flannel network
+- name: Config flanneld options
+  template: src=flanneld.cnf.j2 dest=/etc/default/flanneld owner=root group=root mode=0644
+
+- name: Config flanneld network
   shell: "export $(cut -d= -s -f1,2 /etc/default/etcdctl | grep -v \"#\") && {{ETCD_DIR}}etcd-v{{ETCD_VERSION}}-linux-amd64/etcdctl set /{{FLANNEL_NET_PREFIX}}/network/config '{\"Network\":\"'{{FLANNEL_IP_RANGE}}'\", \"Backend\": {\"Type\": \"vxlan\"}}'"
 
 - name: Start/Restart flanneld service
