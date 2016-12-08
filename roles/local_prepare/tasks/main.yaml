@@ -1,4 +1,22 @@
 ---
 
+- name: check local exists
+  stat: path=/tmp/kubernetes
+  when: K8S_OBTAIN_REMOTE == 0
+  register: localk8sex
+
+- name: OS and version check
+  fail:
+    msg: "BSD tar isn't support yet on ansible 2.2.0.0. Please manual download from https://github.com/kubernetes/kubernetes/releases/download/v{{K8S_VERSION}}/kubernetes.tar.gz .And untar to '/tmp/' as '/tmp/kubernetes' for following work."
+  when: K8S_OBTAIN_REMOTE == 0 and localk8sex.stat.exists == False and ansible_distribution == "MacOSX"
+
+- name: Obtain k8s source
+  unarchive:
+    src: "https://github.com/kubernetes/kubernetes/releases/download/v{{K8S_VERSION}}/kubernetes.tar.gz"
+    dest: "/tmp"
+    remote_src: yes
+  when: K8S_OBTAIN_REMOTE == 0 and localk8sex.stat.exists == False
+
 - name: Generate k8s ssl
-  shell: "ssl/k8s/naive/gen_ca.sh {{K8S_CERT_DOMAIN}}/O={{K8_MASTER_EXT_LB_IP}}""
+  shell: "cd ssl/k8s/naive && ./gen_ca.sh {{K8S_CERT_DOMAIN}}/O={{K8S_MASTER_EXT_LB_IP}}"
+

@@ -30,7 +30,7 @@
 - name: Config flannel service
   template: src=flanneld.service.j2 dest=/lib/systemd/system/flanneld.service owner=root group=root mode=0644
 
-- name: Config etcd network
+- name: Config flannel network
   shell: "export $(cut -d= -s -f1,2 /etc/default/etcdctl | grep -v \"#\") && {{ETCD_DIR}}etcd-v{{ETCD_VERSION}}-linux-amd64/etcdctl set /{{FLANNEL_NET_PREFIX}}/network/config '{\"Network\":\"'{{FLANNEL_IP_RANGE}}'\", \"Backend\": {\"Type\": \"vxlan\"}}'"
 
 - name: Start/Restart flanneld service

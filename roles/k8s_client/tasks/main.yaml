@@ -5,7 +5,7 @@
   register: kubectlex
 
 - name: obtain and setup kubectl
-  shell: "scripts/download_kubectl.sh {{K8S_VERSION}}"
+  shell: "scripts/download_kubectl.sh {{K8S_VERSION}} {{K8S_OBTAIN_REMOTE}}"
   when: kubectlex.stat.exists == False or kubectlex.stat.executable == False
 
 - name: Config kubernetes cluster

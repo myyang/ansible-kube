@@ -12,6 +12,10 @@
     path: "{{K8S_DIR}}{{K8S_VERSION}}/kubernetes/server"
   register: k8svdir
 
+- name: promise k8s version path
+  file: path={{K8S_DIR}}{{K8S_VERSION}} state=directory recurse=yes owner=root group=root
+  when: k8svdir.stat.exists == False or k8svdir.stat.isdir == False
+
 - name: Obtain k8s source
   unarchive:
     src: "https://github.com/kubernetes/kubernetes/releases/download/v{{K8S_VERSION}}/kubernetes.tar.gz"
@@ -19,11 +23,7 @@
     owner: root
     group: root
     remote_src: yes
-  when: k8svdir.stat.exists == False or k8svdir.stat.isdir == False
-
-- name: promise k8s version path
-  file: path={{K8S_DIR}}{{K8S_VERSION}} state=directory recurse=yes owner=root group=root
-  when: k8svdir.stat.exists == False or k8svdir.stat.isdir == False
+  when: K8S_OBTAIN_REMOTE == 1 and (k8svdir.stat.exists == False or k8svdir.stat.isdir == False)
 
 - name: Setup k8s executable
   unarchive:
@@ -32,8 +32,16 @@
     owner: root
     group: root
     remote_src: yes
-  when: k8svdir.stat.exists == False or k8svdir.stat.isdir == False
+  when: K8S_OBTAIN_REMOTE == 1 and (k8svdir.stat.exists == False or k8svdir.stat.isdir == False)
 
 - name: Clean k8s tmp
   file:  path=/tmp/kubernetes state=absent
-  when: k8svdir.stat.exists == False or k8svdir.stat.isdir == False
+  when: K8S_OBTAIN_REMOTE == 1 and (k8svdir.stat.exists == False or k8svdir.stat.isdir == False)
+
+- name: Setup k8s executable from local
+  unarchive:
+    src: "/tmp/kubernetes/server/kubernetes-server-linux-amd64.tar.gz"
+    dest: "{{K8S_DIR}}{{K8S_VERSION}}"
+    owner: root
+    group: root
+  when: K8S_OBTAIN_REMOTE == 0 and (k8svdir.stat.exists == False or k8svdir.stat.isdir == False)

@@ -1,11 +1,9 @@
 ---
 
-#- name: generate ssl key for k8s
-#  hosts: localhost
-#  pre_tasks:
-#    - name: execute shell
-#      raw: cd ssl/k8s_naive/ && MASTER_IP={{K8S_INITIAL_MASTER_IP}} ./gen_ca.sh
-#    - setup: #
+- name: prepare local
+  hosts: localhost
+  roles:
+    - local_prepare
 
 - name: setup python2
   hosts: masters:slaves
@@ -15,11 +13,6 @@
     - name: Install python for Ansible
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
     - setup: # aka gather_facts
-
-- name: prepare local
-  hosts: localhost
-  roles:
-    - local_prepare
 
 - name: gather_facts on masters and slaves
   hosts: masters:slaves

@@ -36,11 +36,15 @@ else
     exit 3
 fi
 
-url="https://storage.googleapis.com/kubernetes-release/release/v$1/bin/$platform/$arch/kubectl"
-echo "$url"
+if [[ "$2" == "1" ]]; then
+  url="https://storage.googleapis.com/kubernetes-release/release/v$1/bin/$platform/$arch/kubectl"
+  echo "$url"
 
-curl -O $url
-chmod +x kubectl
-mv kubectl /usr/local/bin/
+  curl -O $url
+  chmod +x kubectl
+  mv kubectl /usr/local/bin/
+else
+  cp /tmp/kubernetes/platforms/$platform/$arch/kubectl /usr/local/bin/
+fi
 
 echo "kubectl has been copied to /usr/local/bin/. Try 'kubectl version' and config your cluster"
