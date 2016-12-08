@@ -1,0 +1,36 @@
+---
+
+- name: stop workers
+  hosts: workers
+  become: true
+  tasks:
+  - name: stop kube-proxy 
+    systemd: name=kube-proxy state=stopped
+  - name: stop kubelet 
+    systemd: name=kubelet state=stopped
+
+- name: stop master
+  hosts: masters
+  become: true
+  tasks:
+  - name: stop kube-scheduler service
+    systemd: name=kube-scheduler state=stopped
+
+  - name: stop kube-controller-manager service
+    systemd: name=kube-controller-manager state=stopped
+
+  - name: stop kube-api-server service
+    systemd: name=kube-api-server state=stopped
+
+- name: stop basic service docker, flanneld, etcd
+  hosts: masters:workers
+  become: true
+  tasks:
+  - name: stop docker service
+    systemd: name=docker state=stopped
+
+  - name: stop flanneld service
+    systemd: name=flanneld state=stopped
+
+  - name: stop etcd service
+    systemd: name=etcd state=stopped
