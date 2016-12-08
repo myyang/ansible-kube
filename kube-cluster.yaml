@@ -6,7 +6,7 @@
     - local_prepare
 
 - name: setup python2
-  hosts: masters:slaves
+  hosts: masters:workers
   become: true
   gather_facts: no
   pre_tasks:
@@ -14,26 +14,26 @@
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
     - setup: # aka gather_facts
 
-- name: gather_facts on masters and slaves
-  hosts: masters:slaves
+- name: gather_facts on masters and workers
+  hosts: masters:workers
 
 - name: Setup etcd, flannel, docker
-  hosts: masters:slaves
+  hosts: masters:workers
   become: true
   roles:
     - basic
 
-- name: configure master
+- name: configure masters
   hosts: masters
   become: true
   roles:
     - k8s_master
 
-- name: configure slave
-  hosts: slaves
+- name: configure workers
+  hosts: workers
   become: true
   roles:
-    - k8s_slave
+    - k8s_worker
 
 - name: configure client
   hosts: localhost

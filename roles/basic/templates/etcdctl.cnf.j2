@@ -11,14 +11,14 @@
 # a comma-delimited list of machine addresses in the cluster
 # default: `"http://127.0.0.1:2379"`
 # env variable: ETCDCTL_PEERS
-ETCDCTL_PEERS={% for host in groups['masters'] | union(groups['slaves']) %}https://{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:2379{% if not loop.last %},{% endif %}{% endfor %}
+ETCDCTL_PEERS={% for host in groups['masters'] | union(groups['workers']) %}https://{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:2379{% if not loop.last %},{% endif %}{% endfor %}
 
 ### --endpoint
 # a comma-delimited list of machine addresses in the cluster
 # default: `"http://127.0.0.1:2379"`
 # env variable: ETCDCTL_ENDPOINT
 # Without `--no-sync` flag, this will be overwritten by etcd cluster when it does internal sync.
-ETCDCTL_ENDPOINT={% for host in groups['masters'] | union(groups['slaves']) %}https://{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:2379{% if not loop.last %},{% endif %}{% endfor %}
+ETCDCTL_ENDPOINT={% for host in groups['masters'] | union(groups['workers']) %}https://{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:2379{% if not loop.last %},{% endif %}{% endfor %}
 
 ### --cert-file
 # identify HTTPS client using this SSL certificate file
