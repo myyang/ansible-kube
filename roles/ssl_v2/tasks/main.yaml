@@ -8,6 +8,10 @@
     msg: "Please download `cfssl` and put at /usr/local/bin/cfssl"
   when: cfsslex.stat.exists == False
 
+- name: check etcd certs
+  stat: path=ssl/etcd/_ssl follow=yes
+  register: etcdcertex
+
 - name: Config etcd json files
   template:
     src: "etcd-{{item}}.json.j2"
@@ -17,9 +21,15 @@
     - ca-csr
     - server
     - client
+  when: ALWAYS_REGEN_CERT == 1 or etcdcertex.stat.exists == False or (etcdcertex.stat.islnk is not defined and etcdcertex.stat.islnk == False)
 
 - name: Generate etcd ssl
   shell: "cd ssl/etcd/ssl_v2 && ./gen_ca.sh"
+  when: ALWAYS_REGEN_CERT == 1 or etcdcertex.stat.exists == False or (etcdcertex.stat.islnk is not defined and etcdcertex.stat.islnk == False)
+
+- name: check k8s certs
+  stat: path=ssl/k8s/_ssl follow=yes
+  register: k8scertex
 
 - name: Config k8s json files
   template:
@@ -30,6 +40,8 @@
     - ca-csr
     - master
     - worker
+  when: ALWAYS_REGEN_CERT == 1 or k8scertex.stat.exists == False or (k8scertex.stat.islnk is not defined and k8scertex.stat.islnk == False)
 
 - name: Generate k8s ssl
   shell: "cd ssl/k8s/ssl_v2 && ./gen_ca.sh"
+  when: ALWAYS_REGEN_CERT == 1 or k8scertex.stat.exists == False or (k8scertex.stat.islnk is not defined and k8scertex.stat.islnk == False)

@@ -3,6 +3,8 @@
 
 CLUSTER_NAME: "k8s-test"
 
+ALWAYS_REGEN_CERT: 0  # always regenerate certificates, set 1 to enable
+
 ETCD_DIR: '/opt/etcd/'
 ETCD_DATA_DIR: '/var/lib/etcd/default/'
 ETCD_VERSION: 3.0.15
