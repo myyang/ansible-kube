@@ -1,0 +1,37 @@
+---
+
+- name: start/restart basic service docker, flanneld, etcd
+  hosts: masters:workers
+  become: true
+  tasks:
+  - name: start/restart etcd service
+    systemd: name=etcd state=restarted daemon_reload=yes
+
+  - name: start/restart flanneld service
+    systemd: name=flanneld state=restarted daemon_reload=yes
+
+  - name: start/restart docker service
+    systemd: name=docker state=restarted daemon_reload=yes
+
+- name: start/restart master
+  hosts: masters
+  become: true
+  tasks:
+  - name: start/restart kube-api-server service
+    systemd: name=kube-api-server state=restarted daemon_reload=yes
+
+  - name: start/restart kube-controller-manager service
+    systemd: name=kube-controller-manager state=restarted daemon_reload=yes
+
+  - name: start/restart kube-scheduler service
+    systemd: name=kube-scheduler state=restarted daemon_reload=yes
+
+- name: start/restart workers
+  hosts: workers
+  become: true
+  tasks:
+  - name: start/restart kubelet 
+    systemd: name=kubelet state=restarted daemon_reload=yes
+
+  - name: start/restart kube-proxy 
+    systemd: name=kube-proxy state=restarted daemon_reload=yes
