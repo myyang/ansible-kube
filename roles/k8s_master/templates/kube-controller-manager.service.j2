@@ -8,6 +8,7 @@ ExecStart={{K8S_DIR}}{{K8S_VERSION}}/kubernetes/server/bin/kube-controller-manag
 --master={{ansible_eth0.ipv4.address}}:8080 \
 --root-ca-file={{K8S_DIR}}{{K8S_VERSION}}/ssl/ca.pem \
 --service-account-private-key-file={{K8S_DIR}}{{K8S_VERSION}}/ssl/server-key.pem \
+--vmodule=leaderelection*=3 \
 --logtostderr=true
 Restart=on-failure
 LimitNOFILE=65536

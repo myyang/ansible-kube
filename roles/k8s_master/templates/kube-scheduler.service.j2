@@ -6,6 +6,7 @@ Documentation=https://github.com/kubernetes/kubernetes
 User=root
 ExecStart={{K8S_DIR}}{{K8S_VERSION}}/kubernetes/server/bin/kube-scheduler \
 --logtostderr=true \
+--vmodule=leaderelection*=3 \
 --master={{ansible_eth0.ipv4.address}}:8080
 Restart=on-failure
 LimitNOFILE=65536
