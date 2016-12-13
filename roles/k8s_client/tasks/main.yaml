@@ -9,13 +9,16 @@
   when: kubectlex.stat.exists == False or kubectlex.stat.executable == False
 
 - name: Config kubernetes cluster
-  shell: "kubectl config set-cluster '{{CLUSTER_NAME}}' --server=http://{{K8S_MASTER_EXT_LB_IP}}:8080"
+  shell: "kubectl config set-cluster '{{CLUSTER_NAME}}' --server=https://{{K8S_MASTER_EXT_LB_IP}}:6443 --certificate-authority={{playbook_dir}}//ssl/k8s/_ssl/ca.pem"
 
 - name: Config kubernetes credential
-  shell: "kubectl config set-credentials '{{CLUSTER_NAME}}' --client-certificate=''"
+  shell: "kubectl config set-credentials '{{CLUSTER_NAME}}' --client-certificate={{playbook_dir}}/ssl/k8s/_ssl/serviceaccount.pem --client-key={{playbook_dir}}/ssl/k8s/_ssl/serviceaccount-key.pem"
 
 - name: Config context
   shell: "kubectl config set-context '{{CLUSTER_NAME}}' --cluster='{{CLUSTER_NAME}}' --namespace='{{CLUSTER_NAME}}'"
 
 - name: Use latest context
   shell: "kubectl config use-context '{{CLUSTER_NAME}}'"
+
+- name: Create namespace
+  shell: "kubectl create namespace {{CLUSTER_NAME}}"

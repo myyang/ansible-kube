@@ -1,6 +1,7 @@
 {
     "CN": "k8s master",
     "hosts": [
+    "{{K8S_MASTER_EXT_LB_IP}}",
 {% for host in groups['masters'] %}
     "{{hostvars[host]['ansible_nodename']}}",
     "{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}"{%if not loop.last %},{% endif %}

@@ -14,6 +14,7 @@ ExecStart={{K8S_DIR}}{{K8S_VERSION}}/kubernetes/server/bin/kube-apiserver \
 --allow-privileged=false \
 --service-cluster-ip-range={{K8S_SERVICE_CLUSTER_IP_RANGE}} \
 --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,SecurityContextDeny,ResourceQuota \
+--service-account-key-file={{K8S_DIR}}{{K8S_VERSION}}/ssl/serviceaccount-key.pem \
 --service-node-port-range=30000-32767 \
 --advertise-address={{ ansible_eth0.ipv4.address }} \
 --etcd-keyfile={{ETCD_DIR}}{{ETCD_VERSION}}/ssl/client-key.pem \

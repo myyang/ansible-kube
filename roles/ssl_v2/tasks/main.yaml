@@ -40,6 +40,7 @@
     - ca-csr
     - master
     - worker
+    - serviceaccount
   when: ALWAYS_REGEN_CERT == 1 or k8scertex.stat.exists == False or (k8scertex.stat.islnk is not defined and k8scertex.stat.islnk == False)
 
 - name: Generate k8s ssl

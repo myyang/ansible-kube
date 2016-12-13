@@ -12,6 +12,7 @@
     - ca
     - master
     - master-key
+    - serviceaccount-key
 
 - name: Config kube-api-server service
   template:
