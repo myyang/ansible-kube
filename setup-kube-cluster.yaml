@@ -41,7 +41,7 @@
   roles:
     - k8s_client
 
-- name: configure dns
+- name: configure k8s addons
   hosts: localhost
   roles:
-    - k8s_dns
+    - k8s_addons
