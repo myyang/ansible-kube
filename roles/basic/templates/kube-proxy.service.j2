@@ -1,0 +1,13 @@
+[Unit]
+Description=Kubernetes Proxy
+After=network.target
+ 
+[Service]
+ExecStart={{K8S_DIR}}{{K8S_VERSION}}/kubernetes/server/bin/kube-proxy \
+--hostname-override={{ansible_eth0.ipv4.address}} \
+--master=http://{{K8S_MASTER_LB_IP}}:8080 \
+--logtostderr=true
+Restart=on-failure
+  
+[Install]
+WantedBy=multi-user.target

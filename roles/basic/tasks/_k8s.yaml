@@ -45,3 +45,11 @@
     owner: root
     group: root
   when: K8S_OBTAIN_REMOTE == 0 and (k8svdir.stat.exists == False or k8svdir.stat.isdir == False)
+
+- name: Config kube-proxy service on all nodes
+  template:
+    src: kube-proxy.service.j2
+    dest: /lib/systemd/system/kube-proxy.service
+    owner: root
+    group: root
+    mode: 0644

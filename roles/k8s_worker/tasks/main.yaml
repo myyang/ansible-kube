@@ -11,13 +11,5 @@
 - name: Start/Restart kubelet service
   systemd: name=kubelet state=restarted daemon_reload=yes enabled=yes
 
-- name: Config kube-proxy service
-  template:
-    src: kube-proxy.service.j2
-    dest: /lib/systemd/system/kube-proxy.service
-    owner: root
-    group: root
-    mode: 0644
-
 - name: Start/Restart kube-proxy service
   systemd: name=kube-proxy state=restarted daemon_reload=yes enabled=yes
